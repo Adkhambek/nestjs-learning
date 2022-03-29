@@ -8,6 +8,7 @@ import { JWT_SERET } from 'src/config';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUser } from './dto/loginUser.dto';
 import { compare } from 'bcrypt';
+import { UpdateUser } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -60,6 +61,11 @@ export class UserService {
     }
     delete userExist.password;
     return userExist;
+  }
+  async updateUser(id: number, updateUser: UpdateUser): Promise<UserEntity> {
+    const user = await this.findById(id);
+    const udatedUser = Object.assign(user, updateUser);
+    return await this.userRepository.save(udatedUser);
   }
   generateJWT(user: UserEntity): string {
     return sign(
